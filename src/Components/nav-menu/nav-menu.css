@@ -1,0 +1,13 @@
+.nav-bar {
+  display: flex;
+  flex-direction: column;
+  margin: 1.5vh 0 1.5vh 1vw;
+  background-color: #1d7623;
+  height: 95vh
+
+}
+
+.footer {
+  background-color: #1d4976;
+  padding: 1vh 1vw;
+}

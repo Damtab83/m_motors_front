@@ -1,0 +1,14 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+app-nav-menu {
+  flex: 0 0 16rem;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  margin: 1vh;
+}
