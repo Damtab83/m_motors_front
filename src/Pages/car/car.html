@@ -1,1 +1,15 @@
-<p>car works!</p>
+<div class="container-car">
+  @if (car; as selectedCar) {
+    <section class="car-details">
+      <h1>{{ selectedCar.name }}</h1>
+      <p>{{ selectedCar.description }}</p>
+      <img [src]="selectedCar.image" [alt]="'Photo de ' + selectedCar.name">
+      <a matButton routerLink="/shop-car">Retour aux voitures</a>
+    </section>
+  } @else {
+    <section class="car-details">
+      <h1>Voiture introuvable</h1>
+      <a matButton routerLink="/shop-car">Retour aux voitures</a>
+    </section>
+  }
+</div>

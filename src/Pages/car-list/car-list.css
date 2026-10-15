@@ -1,0 +1,59 @@
+:host {
+  display: block;
+  position: relative;
+  isolation: isolate;
+  background-color: #868489;
+  padding: 1rem;
+  margin: 1vh 0 1vh 2vw;
+  width: 75vw;
+  height: 90vh;
+}
+
+:host::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: url("../../../public/images/listing_car.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.65;
+}
+
+.container-carList {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  color: #e40c0c;
+}
+
+h1 {
+  font-size: 5rem;
+  height: stretch;
+  text-shadow: 2px 2px #e5bcbc;
+}
+
+.show-car {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+h6 {
+  font-size: 3rem;
+  height: stretch;
+  text-shadow: 2px 2px #e5bcbc;
+}
+
+.car-card {
+  max-width: 200px;
+  margin: 5px
+}
+
+

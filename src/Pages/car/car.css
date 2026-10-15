@@ -1,0 +1,57 @@
+:host {
+  display: block;
+  position: relative;
+  isolation: isolate;
+  background-color: #868489;
+  padding: 1rem;
+  margin: 1vh 0 1vh 2vw;
+  width: 75vw;
+  height: 90vh;
+}
+
+:host::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: url("../../../public/images/choice_car.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.65;
+}
+
+.container-car {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  color: #e40c0c;
+}
+
+h1 {
+  font-size: 5rem;
+  height: stretch;
+  text-shadow: 2px 2px #e5bcbc;
+}
+
+.car-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.car-details h1 {
+  height: auto;
+  margin: 0;
+}
+
+.car-details img {
+  max-width: min(100%, 40rem);
+  max-height: 45vh;
+  object-fit: contain;
+  border:#e40c0c  5px solid;
+  border-radius: 15px;
+}

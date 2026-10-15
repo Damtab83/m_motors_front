@@ -1,4 +1,14 @@
 <div class="nav-bar">
+  <div class="header-menu">
+    <a matButton [routerLink]="['/home']">
+      <mat-icon>home</mat-icon>
+      Home
+    </a>
+    <a matButton [routerLink]="['/car-list']">
+      <mat-icon>directions_car</mat-icon>
+      Cars
+    </a>
+  </div>
   <p>nav-menu works!</p>
   <mat-slide-toggle>Toggle me!</mat-slide-toggle>
 
@@ -15,12 +25,16 @@
       <span>CGV</span>
     </p>
     <p>
+      <a mat-button [routerLink]="['/notice-legal']">
       <mat-icon>gavel</mat-icon>
       <span>Mentions Légales</span>
+      </a>
     </p>
     <p>
+      <a mat-button [routerLink]="['/contact']">
       <mat-icon>call</mat-icon>
       <span>Contact</span>
+      </a>
     </p>  
     
   </div>  

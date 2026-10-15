@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #71bcd5;
+  height: 70vh;
+  width: 40vw;
+  margin: 15vh auto;
+  border-radius: 2rem;
+  box-shadow: 1px 1px 10px #2ff61080;
+}
+
+h1 {
+  font-size: 2.25rem;
+  margin: 0 0 10vh;
+}
+
+app-login-field, app-register-field {
+  width: 100%;
+}

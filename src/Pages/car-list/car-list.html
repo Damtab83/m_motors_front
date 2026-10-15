@@ -1,0 +1,24 @@
+<div class="container-carList">
+  <h1>Vente de voitures </h1>
+  
+<div class="show-car">
+
+  @for (car of cars; track $index) {
+    <mat-card class="car-card" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{ car.name }}</mat-card-title>
+        <mat-card-subtitle>{{ car.description }}</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image [src]="car.image" [alt]="'Photo de ' + car.name">
+      <mat-card-content>
+      </mat-card-content>
+      <mat-card-actions>
+        <a matButton [routerLink]="['/car', car.id]">Voir</a>
+      </mat-card-actions>
+    </mat-card>
+  } @empty {
+    <h6>⚠️ La concession est vide!</h6>
+  }
+</div>
+
+</div>
