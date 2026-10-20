@@ -6,13 +6,18 @@
         <img [src]="selectedCar.image" [alt]="'Photo de ' + selectedCar.brand + ' - ' + selectedCar.model">
         <div class="description">
           <p>{{ selectedCar.model }}</p>
-          <p>{{ selectedCar.motorisation }}</p>
-          <p>Kilomètre{{ selectedCar.kilometer }} km</p>
-          <p>Prix: {{ selectedCar.price +'EUR' }}</p>
+          <p>Motorisation: {{ selectedCar.motorisation }}</p>
+          <p>Kilomètre: {{ selectedCar.kilometer }} km</p>
+          <p>Prix: {{ selectedCar.price +' EUR' }}</p>
         </div>
       </div>
       
-      <a matButton routerLink="/shop-car" class="return-list">Retour à la liste des voitures</a>
+      <div class="button-action">
+        <a matButton routerLink="/shop-car"><mat-icon>arrow_back</mat-icon> Retour à la liste des voitures</a>
+        <a matButton>Ajouter au panier</a>
+      </div>
+
+
     </section>
   } @else {
     <section class="car-details">

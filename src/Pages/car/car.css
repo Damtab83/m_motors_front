@@ -68,7 +68,10 @@ p {
     gap: 5vw;
 }
 
-.return-list {
+.button-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
   margin-top: 2rem;
-  text-align: center;
 }
