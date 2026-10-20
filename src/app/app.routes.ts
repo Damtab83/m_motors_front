@@ -7,6 +7,8 @@ import { Login } from '../Pages/Auth/login/login';
 import { Register } from '../Pages/Auth/register/register';
 import { Contact } from '../Pages/contact/contact';
 import { NoticeLegal } from '../Pages/notice-legal/notice-legal';
+import { SalesConditions } from '../Pages/sales-conditions/sales-conditions';
+import { CustomerPanel } from '../Pages/Dashboard/customer-panel/customer-panel';
 
 export const routes: Routes = [
   {path: '', component: Home},
@@ -17,5 +19,7 @@ export const routes: Routes = [
   {path: 'register', component: Register},
   {path: 'contact', component: Contact},
   {path:'notice-legal', component:NoticeLegal },
+  {path: 'sales-conditions', component:SalesConditions },
+  {path: 'customer-panel', component: CustomerPanel},
   {path: '**', component: NotFound},
 ];

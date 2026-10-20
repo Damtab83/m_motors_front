@@ -1,0 +1,34 @@
+:host {
+  display: block;
+  background-color: #580ce4;
+  padding: 1rem;
+  margin: 1vh 0 1vh 2vw;
+  width: 75vw;
+  height: 90vh;
+}
+
+.sales-conditions {
+  background-color: #363434;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  color: #e40c0c;
+  border-radius: 15px;
+}
+
+h1 {
+  font-size: 3rem;
+  text-decoration: underline;
+  margin: 4;
+  text-shadow: 2px 2px #e5bcbc;
+}
+
+.sales-conditions-content {
+  font-size: 1.5rem;
+  text-align: start;
+  margin: 1rem;
+  line-height: 1.5;
+  width: 70%;
+}

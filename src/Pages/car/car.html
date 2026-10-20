@@ -1,15 +1,24 @@
 <div class="container-car">
   @if (car; as selectedCar) {
     <section class="car-details">
-      <h1>{{ selectedCar.name }}</h1>
-      <p>{{ selectedCar.description }}</p>
-      <img [src]="selectedCar.image" [alt]="'Photo de ' + selectedCar.name">
-      <a matButton routerLink="/shop-car">Retour aux voitures</a>
+      <h1>{{ selectedCar.brand }}</h1>
+      <div class="show-car">
+        <img [src]="selectedCar.image" [alt]="'Photo de ' + selectedCar.brand + ' - ' + selectedCar.model">
+        <div class="description">
+          <p>{{ selectedCar.model }}</p>
+          <p>{{ selectedCar.motorisation }}</p>
+          <p>Kilomètre{{ selectedCar.kilometer }} km</p>
+          <p>Prix: {{ selectedCar.price +'EUR' }}</p>
+        </div>
+      </div>
+      
+      <a matButton routerLink="/shop-car" class="return-list">Retour à la liste des voitures</a>
     </section>
   } @else {
     <section class="car-details">
+
       <h1>Voiture introuvable</h1>
-      <a matButton routerLink="/shop-car">Retour aux voitures</a>
+      <a matButton routerLink="/shop-car">Retour à la liste des voitures</a>
     </section>
   }
 </div>

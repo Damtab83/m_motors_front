@@ -4,12 +4,11 @@
       <mat-icon>home</mat-icon>
       Home
     </a>
-    <a matButton [routerLink]="['/car-list']">
+    <a matButton [routerLink]="['/shop-car']">
       <mat-icon>directions_car</mat-icon>
       Cars
     </a>
   </div>
-  <p>nav-menu works!</p>
   <mat-slide-toggle>Toggle me!</mat-slide-toggle>
 
 
@@ -21,8 +20,10 @@
       <span>Copyright</span>
     </p>
     <p>
-      <mat-icon>description</mat-icon>
-      <span>CGV</span>
+      <a mat-button [routerLink]="['/sales-conditions']">
+        <mat-icon>description</mat-icon>
+        <span>CGV</span>
+      </a>
     </p>
     <p>
       <a mat-button [routerLink]="['/notice-legal']">
