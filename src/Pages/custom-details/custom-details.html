@@ -1,0 +1,33 @@
+<section class="custom-details" aria-labelledby="customer-details-title">
+  <div class="details-header">
+    <h2 id="customer-details-title">Détails client</h2>
+    <button matButton type="button" (click)="close.emit()">
+      <mat-icon>arrow_back</mat-icon>
+      Retour
+    </button>
+  </div>
+
+  @if (user) {
+    <div class="details-grid">
+      <div class="card">
+        <h3>Client</h3>
+        <p><strong>Prénom :</strong> {{ user.firstname }}</p>
+        <p><strong>Nom :</strong> {{ user.lastname }}</p>
+        <p><strong>Email :</strong> {{ user.email }}</p>
+      </div>
+
+      <div class="card">
+        <h3>Voiture choisie</h3>
+        @if (car) {
+          <p><strong>Marque :</strong> {{ car.brand }}</p>
+          <p><strong>Modèle :</strong> {{ car.model }}</p>
+          <p><strong>Prix :</strong> {{ car.price }} €</p>
+        } @else {
+          <p>Aucune voiture associée pour ce client.</p>
+        }
+      </div>
+    </div>
+  } @else {
+    <p>Aucun client sélectionné.</p>
+  }
+</section>

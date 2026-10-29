@@ -1,1 +1,105 @@
-<p>admin-panel works!</p>
+<h1>Bienvenue Administrateur</h1>
+<app-admin-nav-bar
+  [selectedSection]="selectedSection()"
+  (sectionChange)="selectSection($event)">
+</app-admin-nav-bar>
+<div class="dashboard-admin">
+  @if (selectedUser()) {
+    <app-custom-details
+      [user]="selectedUser()"
+      [car]="selectedCar()"
+      (close)="closeCustomerDetails()">
+    </app-custom-details>
+  } @else {
+    @switch (selectedSection()) {
+      @case ('users') {
+        <section aria-labelledby="users-title">
+          <h2 id="users-title">Liste des utilisateurs</h2>
+          @if (usersLoading()) {
+            <p>Chargement des utilisateurs...</p>
+          } @else if (usersError()) {
+            <p role="alert">{{ usersError() }}</p>
+          } @else if (users().length === 0) {
+            <p>Aucun utilisateur trouvé.</p>
+          } @else {
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Prénom</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">E-mail</th>
+                    <th scope="col" class="actions-column">Détails</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (user of users(); track user.email) {
+                    <tr>
+                      <td>{{ user.firstname }}</td>
+                      <td>{{ user.lastname }}</td>
+                      <td>{{ user.email }}</td>
+                      <td class="actions-cell">
+                        <button
+                          mat-icon-button
+                          type="button"
+                          aria-label="Voir les détails de {{ user.firstname }} {{ user.lastname }}"
+                          (click)="openCustomerDetails(user)">
+                          <mat-icon>visibility</mat-icon>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </section>
+      }
+      @case ('cars') {
+        <section aria-labelledby="cars-title">
+          <h2 id="cars-title">Liste des voitures</h2>
+          @if (carsLoading()) {
+            <p>Chargement des voitures...</p>
+          } @else if (carsError()) {
+            <p role="alert">{{ carsError() }}</p>
+          } @else if (cars().length === 0) {
+            <p>Aucune voiture trouvée.</p>
+          } @else {
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Marque</th>
+                    <th scope="col">Modèle</th>
+                    <th scope="col">Prix</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (car of cars(); track car.id ?? $index) {
+                    <tr>
+                      <td>{{ car.brand }}</td>
+                      <td>{{ car.model }}</td>
+                      <td>{{ car.price }} €</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </section>
+      }
+      @case ('documents') {
+        <section aria-labelledby="documents-title">
+          <h2 id="documents-title">Documents</h2>
+          <p>Cette rubrique n’est pas encore connectée aux données.</p>
+        </section>
+      }
+      @case ('test-drives') {
+        <section aria-labelledby="test-drives-title">
+          <h2 id="test-drives-title">Essais voiture</h2>
+          <p>Cette rubrique n’est pas encore connectée aux données.</p>
+        </section>
+      }
+    }
+  }
+</div>

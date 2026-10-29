@@ -1,0 +1,24 @@
+<div class="admin-nav-bar">
+  <div class="header-menu">
+    <button matButton type="button" [class.active]="selectedSection() === 'users'"
+      [attr.aria-pressed]="selectedSection() === 'users'" (click)="selectSection('users')">
+      <mat-icon>account_circle</mat-icon>
+      Utilisateurs
+    </button>
+    <button matButton type="button" [class.active]="selectedSection() === 'cars'"
+      [attr.aria-pressed]="selectedSection() === 'cars'" (click)="selectSection('cars')">
+      <mat-icon>directions_car</mat-icon>
+      Voitures
+    </button>
+    <button matButton type="button" [class.active]="selectedSection() === 'documents'"
+      [attr.aria-pressed]="selectedSection() === 'documents'" (click)="selectSection('documents')">
+      <mat-icon>list</mat-icon>
+      Documents
+    </button>
+    <button matButton type="button" [class.active]="selectedSection() === 'test-drives'"
+      [attr.aria-pressed]="selectedSection() === 'test-drives'" (click)="selectSection('test-drives')">
+      <mat-icon>event</mat-icon>
+      Essais voiture
+    </button>
+  </div>
+</div>

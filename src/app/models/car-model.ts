@@ -5,6 +5,6 @@ export interface CarModel {
   motorisation: string;
   kilometer: number;
   price: number;
-  testDriving: boolean;
+  testDriving: boolean | null;
   imageCar?: string;
 }

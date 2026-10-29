@@ -1,28 +1,29 @@
 <div class="container-car">
-  @if (car; as selectedCar) {
+  @if (loading) {
+    <p>Chargement de la voiture...</p>
+  } @else if (car; as selectedCar) {
     <section class="car-details">
       <h1>{{ selectedCar.brand }}</h1>
       <div class="show-car">
-        <img [src]="selectedCar.image" [alt]="'Photo de ' + selectedCar.brand + ' - ' + selectedCar.model">
+        @if (selectedCar.imageCar) {
+          <img [src]="selectedCar.imageCar" [alt]="'Photo de ' + selectedCar.brand + ' - ' + selectedCar.model">
+        }
         <div class="description">
           <p>{{ selectedCar.model }}</p>
           <p>Motorisation: {{ selectedCar.motorisation }}</p>
           <p>Kilomètre: {{ selectedCar.kilometer }} km</p>
-          <p>Prix: {{ selectedCar.price +' EUR' }}</p>
+          <p>Prix: {{ selectedCar.price }} EUR</p>
         </div>
       </div>
-      
+
       <div class="button-action">
         <a matButton routerLink="/shop-car"><mat-icon>arrow_back</mat-icon> Retour à la liste des voitures</a>
         <a matButton>Ajouter au panier</a>
       </div>
-
-
     </section>
   } @else {
     <section class="car-details">
-
-      <h1>Voiture introuvable</h1>
+      <h1>{{ errorMessage || 'Voiture introuvable' }}</h1>
       <a matButton routerLink="/shop-car">Retour à la liste des voitures</a>
     </section>
   }

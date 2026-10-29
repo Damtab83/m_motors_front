@@ -1,24 +1,31 @@
 <div class="container-carList">
   <h1>Vente de voitures </h1>
   
-<div class="show-car">
-
-  @for (car of cars; track $index) {
-    <mat-card class="car-card" appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>{{ car.brand }}</mat-card-title>
-        <mat-card-subtitle>{{ car.model }}</mat-card-subtitle>
-      </mat-card-header>
-      <img mat-card-image [src]="car.image" [alt]="'Photo de ' + car.brand">
-      <mat-card-content>
-      </mat-card-content>
-      <mat-card-actions>
-        <a matButton [routerLink]="['/car', car.id]">Voir</a>
-      </mat-card-actions>
-    </mat-card>
-  } @empty {
-    <h6>⚠️ La concession est vide!</h6>
+  @if (loading()) {
+    <p class="loading-wait">Chargement des voitures...</p>
+  } @else if (errorMessage()) {
+    <p class="loading-wait" role="alert">{{ errorMessage() }}</p>
+  } @else {
+      <div class="show-car">
+        @for (car of cars(); track car.id ?? $index) {
+          <mat-card class="car-card" appearance="outlined">
+            <mat-card-header>
+              <mat-card-title>{{ car.brand }}</mat-card-title>
+              <mat-card-subtitle>{{ car.model }}</mat-card-subtitle>
+            </mat-card-header>
+            @if (car.imageCar) {
+              <img mat-card-image [src]="car.imageCar" [alt]="'Photo de ' + car.brand">
+            }
+            <mat-card-content>
+            </mat-card-content>
+            <mat-card-actions>
+              <a matButton [routerLink]="['/car', car.id]">Voir</a>
+            </mat-card-actions>
+          </mat-card>
+        } @empty {
+          <h6>⚠️ La concession est vide!</h6>
+        }
+      </div>
   }
-</div>
 
 </div>
