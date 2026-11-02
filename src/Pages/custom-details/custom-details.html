@@ -1,13 +1,65 @@
 <section class="custom-details" aria-labelledby="customer-details-title">
   <div class="details-header">
-    <h2 id="customer-details-title">Détails client</h2>
+    <h2 id="customer-details-title">
+      @if (carEditMode) {
+        {{ car ? 'Modifier une voiture' : 'Ajouter une voiture' }}
+      } @else {
+        Détails client
+      }
+    </h2>
     <button matButton type="button" (click)="close.emit()">
       <mat-icon>arrow_back</mat-icon>
       Retour
     </button>
   </div>
 
-  @if (user) {
+  @if (carEditMode) {
+    <form (submit)="submitCar($event)">
+      <div class="car-form">
+        <label>
+          Marque
+          <input name="brand" [value]="carForm.brand" (input)="updateCarField('brand', $event)" required>
+        </label>
+        <label>
+          Modèle
+          <input name="model" [value]="carForm.model" (input)="updateCarField('model', $event)" required>
+        </label>
+        <label>
+          Motorisation
+          <input name="motorisation" [value]="carForm.motorisation" (input)="updateCarField('motorisation', $event)" required>
+        </label>
+        <label>
+          Kilométrage
+          <input name="kilometer" type="number" [value]="carForm.kilometer" (input)="updateCarField('kilometer', $event)" min="0" required>
+        </label>
+        <label>
+          Prix (€)
+          <input name="price" type="number" [value]="carForm.price" (input)="updateCarField('price', $event)" min="0" required>
+        </label>
+        <label class="checkbox-field">
+          <input name="testDriving" type="checkbox" [checked]="carForm.testDriving" (change)="updateCarField('testDriving', $event)">
+          Essai disponible
+        </label>
+      </div>
+
+      @if (editorError) {
+        <p role="alert">{{ editorError }}</p>
+      }
+
+      <div class="form-actions">
+        @if (car) {
+          <button matButton type="button" color="warn" [disabled]="saving" (click)="deleteCar.emit()">
+            <mat-icon>delete</mat-icon>
+            Supprimer
+          </button>
+        }
+        <button matButton type="submit" [disabled]="saving">
+          <mat-icon>{{ car ? 'save' : 'add' }}</mat-icon>
+          {{ saving ? 'Enregistrement...' : (car ? 'Enregistrer' : 'Ajouter') }}
+        </button>
+      </div>
+    </form>
+  } @else if (user) {
     <div class="details-grid">
       <div class="card">
         <h3>Client</h3>
@@ -28,6 +80,6 @@
       </div>
     </div>
   } @else {
-    <p>Aucun client sélectionné.</p>
+    <p>Aucun détail sélectionné.</p>
   }
 </section>

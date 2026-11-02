@@ -25,6 +25,38 @@ h1 {
   overflow-x: auto;
 }
 
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.addition-form {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.addition-form label {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.file-picker input {
+  display: block;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -49,4 +81,11 @@ th {
 
 button[mat-icon-button] {
   color: #1d4ed8;
+}
+
+@media (max-width: 600px) {
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

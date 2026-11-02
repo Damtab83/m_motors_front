@@ -64,7 +64,7 @@ export class CarService {
 
   private toCarModel(car: ApiCar): CarModel {
     return {
-      id: car.carId ?? car.id,
+      carId: car.carId ?? car.id,
       brand: car.brand,
       model: car.model,
       motorisation: car.motorisation,

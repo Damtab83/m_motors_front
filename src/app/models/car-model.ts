@@ -1,5 +1,5 @@
 export interface CarModel {
-  id?:number;
+  carId?:number;
   brand: string;
   model: string;
   motorisation: string;
@@ -7,4 +7,5 @@ export interface CarModel {
   price: number;
   testDriving: boolean | null;
   imageCar?: string;
+  ordersCars?: string;
 }

@@ -11,4 +11,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './nav-menu.html',
   styleUrl: './nav-menu.css',
 })
-export class NavMenu {}
+export class NavMenu {
+
+  myYear = new Date().getFullYear();
+}
