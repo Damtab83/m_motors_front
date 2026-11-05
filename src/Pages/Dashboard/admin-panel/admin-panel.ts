@@ -224,7 +224,7 @@ export class AdminPanel implements OnInit {
     request.subscribe({
       next: (savedCar) => {
         const carToStore = currentCar
-          ? { ...savedCar, id: currentCar.carId }
+          ? { ...savedCar, carId: currentCar.carId }
           : savedCar;
         this.cars.update((cars) =>
           currentCar

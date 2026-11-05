@@ -10,6 +10,7 @@ import { NoticeLegal } from '../Pages/notice-legal/notice-legal';
 import { SalesConditions } from '../Pages/sales-conditions/sales-conditions';
 import { CustomerPanel } from '../Pages/Dashboard/customer-panel/customer-panel';
 import { AdminPanel } from '../Pages/Dashboard/admin-panel/admin-panel';
+import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
   {path: '', component: Home},
@@ -21,7 +22,7 @@ export const routes: Routes = [
   {path: 'contact', component: Contact},
   {path:'notice-legal', component:NoticeLegal },
   {path: 'sales-conditions', component:SalesConditions },
-  {path: 'customer-panel', component: CustomerPanel},
-  {path: 'admin-application-panel', component: AdminPanel},
+  {path: 'customer-panel', component: CustomerPanel, canActivate: [roleGuard('Custom')]},
+  {path: 'admin-application-panel', component: AdminPanel, canActivate: [roleGuard('Admin')]},
   {path: '**', component: NotFound},
 ];

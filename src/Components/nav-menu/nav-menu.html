@@ -8,6 +8,10 @@
       <mat-icon>directions_car</mat-icon>
       Cars
     </a>
+    <a matButton [routerLink]="['/customer-panel']">
+      <mat-icon>account_circle</mat-icon>
+      Mon compte
+    </a>
     <a matButton [routerLink]="['/login']">
       <mat-icon>login</mat-icon>
       Connexion
@@ -16,7 +20,13 @@
       <mat-icon>person_add</mat-icon>
       Inscription
     </a>
-    <a matButton [routerLink]="['/home']">  
+    @if (dashboardLink; as destination) {
+      <a matButton [routerLink]="[destination]">
+        <mat-icon>account_circle</mat-icon>
+        Mon espace
+      </a>
+    }
+    <a matButton [routerLink]="['/home']" (click)="logout()">
       <mat-icon>logout</mat-icon>
       Déconnexion
     </a>

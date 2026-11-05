@@ -51,7 +51,7 @@ describe('CustomDetails', () => {
       kilometer: 45000,
       price: 38000,
       testDriving: false,
-      id: undefined,
+      carId: undefined,
     });
   });
 
@@ -60,7 +60,7 @@ describe('CustomDetails', () => {
     component.deleteCar.subscribe(() => deleteRequested = true);
     fixture.componentRef.setInput('carEditMode', true);
     fixture.componentRef.setInput('car', {
-      id: 1,
+      carId: 1,
       brand: 'Ford',
       model: 'Mustang',
       motorisation: '200CV',

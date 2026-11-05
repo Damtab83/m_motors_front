@@ -1,10 +1,76 @@
-<p>customer-panel works!</p>
 <div class="container-custom-panel">
-  <h1>Bonjour Client</h1>
-  <h2>Bienvenue dans votre espace client</h2>
+  <h1>Mon espace client</h1>
 
-  <div class="custom-list">
+  @if (isLoading()) {
+    <p role="status">Chargement de votre dossier…</p>
+  } @else if (errorMessage()) {
+    <p class="message error" role="alert">{{ errorMessage() }}</p>
+  } @else if (customer(); as client) {
+    <section class="customer-card" aria-labelledby="customer-title">
+      <h2 id="customer-title">Mes informations</h2>
+      <p><strong>Prénom :</strong> {{ client.firstname }}</p>
+      <p><strong>Nom :</strong> {{ client.lastname }}</p>
+      <p><strong>Email :</strong> {{ client.email }}</p>
+    </section>
 
-  
-  </div>
+    <section class="orders-section" aria-labelledby="orders-title">
+      <h2 id="orders-title">Mes véhicules sélectionnés</h2>
+
+      @if (orders().length === 0) {
+        <p>Aucune voiture sélectionnée pour le moment.</p>
+      } @else {
+        <div class="order-list">
+          @for (order of orders(); track order.id ?? $index; let index = $index) {
+            <article class="order-card">
+              <div class="order-summary">
+                <div>
+                  <h3>{{ order.car?.brand }} {{ order.car?.model }}</h3>
+                  <p>{{ offerLabel(order.offerType) }}</p>
+                </div>
+                <button
+                  type="button"
+                  (click)="toggleOrderDetails(index)"
+                  [attr.aria-expanded]="selectedOrderIndex() === index"
+                >
+                  {{ selectedOrderIndex() === index ? 'Masquer les détails' : 'Voir les détails' }}
+                </button>
+              </div>
+
+              @if (selectedOrderIndex() === index) {
+                <div class="order-details">
+                  <h4>Détails du véhicule</h4>
+                  @if (order.car; as car) {
+                    <p><strong>Marque :</strong> {{ car.brand }}</p>
+                    <p><strong>Modèle :</strong> {{ car.model }}</p>
+                    <p><strong>Motorisation :</strong> {{ car.motorisation }}</p>
+                    <p><strong>Kilométrage :</strong> {{ car.kilometer }} km</p>
+                    <p><strong>Prix :</strong> {{ car.price }} €</p>
+                  } @else {
+                    <p>Les détails du véhicule ne sont pas disponibles.</p>
+                  }
+
+                  <h4>Essai de conduite</h4>
+                  @if (order.testDriving; as testDriving) {
+                    <p>
+                      <strong>Date :</strong>
+                      {{ testDriving.dateTime }}
+                    </p>
+                    <p>
+                      <strong>Statut :</strong>
+                      {{ testDriving.confirmed ? 'Confirmé' : 'En attente de confirmation' }}
+                    </p>
+                  } @else {
+                    <p>
+                      Les informations d’essai ne sont pas associées à cette commande dans les
+                      données fournies par l’API.
+                    </p>
+                  }
+                </div>
+              }
+            </article>
+          }
+        </div>
+      }
+    </section>
+  }
 </div>

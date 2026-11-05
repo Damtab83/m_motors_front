@@ -11,7 +11,7 @@ describe('CarList', () => {
   let fixture: ComponentFixture<CarList>;
   const cars: CarModel[] = [
     {
-      id: 1,
+      carId: 1,
       brand: 'Mercedes',
       model: 'Classe A',
       motorisation: '150CV',

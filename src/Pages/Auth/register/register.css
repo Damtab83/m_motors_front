@@ -16,6 +16,26 @@ h1 {
   margin: 0 0 10vh;
 }
 
-app-login-field, app-register-field {
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
+}
+
+mat-form-field {
+  width: 75%;
+}
+
+.form-message {
+  margin: 0.5rem 12.5%;
+  text-align: center;
+}
+
+.error {
+  color: #b00020;
+}
+
+.success {
+  color: #245c2a;
 }

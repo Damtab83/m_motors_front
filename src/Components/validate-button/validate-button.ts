@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 
 @Component({
@@ -7,4 +7,7 @@ import {MatButtonModule} from '@angular/material/button';
   templateUrl: './validate-button.html',
   styleUrl: './validate-button.css',
 })
-export class ValidateButton {}
+export class ValidateButton {
+  @Input() label = 'Valider';
+  @Input() disabled = false;
+}

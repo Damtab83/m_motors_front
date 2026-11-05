@@ -7,7 +7,7 @@
     <p class="loading-wait" role="alert">{{ errorMessage() }}</p>
   } @else {
       <div class="show-car">
-        @for (car of cars(); track car.id ?? $index) {
+        @for (car of cars(); track car.carId ?? $index) {
           <mat-card class="car-card" appearance="outlined">
             <mat-card-header>
               <mat-card-title>{{ car.brand }}</mat-card-title>
@@ -19,7 +19,7 @@
             <mat-card-content>
             </mat-card-content>
             <mat-card-actions>
-              <a matButton [routerLink]="['/car', car.id]">Voir</a>
+              <a matButton [routerLink]="['/car', car.carId]">Voir</a>
             </mat-card-actions>
           </mat-card>
         } @empty {

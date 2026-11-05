@@ -18,7 +18,7 @@ describe('AdminPanel', () => {
   let uploadedDocument: File | null;
   let createdTestDrive: TestDriveRequest | null;
   const existingCar: CarModel = {
-    id: 1,
+    carId: 1,
     brand: 'Mercedes',
     model: 'Classe A',
     motorisation: '150CV',
@@ -47,11 +47,11 @@ describe('AdminPanel', () => {
             getAllCars: () => of([existingCar]),
             createCar: (car: CarModel) => {
               createdCar = car;
-              return of({ ...car, id: 2 });
+              return of({ ...car, carId: 2 });
             },
             updateCar: (id: number, car: CarModel) => {
-              updatedCar = { ...car, id };
-              return of({ ...car, id });
+              updatedCar = { ...car, carId: id };
+              return of({ ...car, carId: id });
             },
             deleteCar: (id: number) => {
               deletedCarId = id;
@@ -137,7 +137,7 @@ describe('AdminPanel', () => {
     fixture.detectChanges();
     fillCarForm({ brand: 'Ford modifiée' });
     await submitCarForm();
-    expect(updatedCar?.id).toBe(1);
+    expect(updatedCar?.carId).toBe(1);
     expect(updatedCar?.brand).toBe('Ford modifiée');
 
     fixture.nativeElement.querySelector('[aria-label^="Modifier"]')?.click();

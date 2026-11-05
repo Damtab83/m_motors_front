@@ -1,5 +1,8 @@
+import type { OrderCarModel } from './orderCar-model';
+
 export enum UserRole {
-  CUSTOM = 'CUSTOM',
+  ADMIN = 'Admin',
+  CUSTOM = 'Custom',
 }
 
 export interface UserModel {
@@ -8,6 +11,6 @@ export interface UserModel {
   lastname: string;
   email: string;
   password: string;
-  role: UserRole.CUSTOM;
-  ordersCars?: string
+  role: UserRole | string;
+  ordersCars?: OrderCarModel[];
 }

@@ -93,7 +93,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @for (car of cars(); track car.id ?? $index) {
+                    @for (car of cars(); track car.carId ?? $index) {
                       <tr>
                         <td>{{ car.brand }}</td>
                         <td>{{ car.model }}</td>
