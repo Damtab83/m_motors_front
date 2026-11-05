@@ -87,6 +87,8 @@ function parseLoginResponse(
 
   const nestedUser =
     value['user'] ??
+    value['userdto'] ??
+    value['userDto'] ??
     value['userCustom'] ??
     value['usercustom'] ??
     value['client'] ??

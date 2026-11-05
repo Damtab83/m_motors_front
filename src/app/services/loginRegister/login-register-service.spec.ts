@@ -150,6 +150,40 @@ describe('LoginRegisterService', () => {
     });
   });
 
+  it('should accept a profile returned under userdto', () => {
+    let result: unknown;
+    service.login({ email: 'client@example.com', password: 'password123' }).subscribe({
+      next: (response) => {
+        result = response;
+      },
+    });
+
+    const request = httpTestingController.expectOne(
+      `${environment.apiUrl}/authentification/connexion`,
+    );
+    request.flush({
+      token: 'sample-token',
+      userdto: {
+        id: 11,
+        firstname: 'Jean',
+        lastname: 'Client',
+        email: 'client@example.com',
+        role: 'Custom',
+      },
+    });
+
+    expect(result).toEqual({
+      token: 'sample-token',
+      user: {
+        id: 11,
+        firstname: 'Jean',
+        lastname: 'Client',
+        email: 'client@example.com',
+        role: 'Custom',
+      },
+    });
+  });
+
   it('should read an authorization token from the response header', () => {
     let result: unknown;
     service.login({ email: 'client@example.com', password: 'password123' }).subscribe({
