@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
 })
 export class DocumentService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/document`;
+  private readonly apiUrl = `${environment.apiUrl}/document/upload`;
 
   uploadDocument(file: File): Observable<unknown> {
     const formData = new FormData();

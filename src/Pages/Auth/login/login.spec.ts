@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError, TimeoutError } from 'rxjs';
 
 import { Login } from './login';
 import { AuthSessionService } from '../../../app/services/auth-session-service';
@@ -78,5 +78,21 @@ describe('Login', () => {
 
     expect(authSessionService.setSession).toHaveBeenCalledWith(user, 'admin-token');
     expect(router.navigateByUrl).toHaveBeenCalledWith('/home');
+  });
+
+  it('should stop submitting and explain when the login request times out', () => {
+    loginRegisterService.login.mockReturnValue(
+      throwError(() => new TimeoutError()),
+    );
+    component.form.setValue({
+      email: 'admin@example.com',
+      password: 'password123',
+    });
+
+    component.submit();
+    fixture.detectChanges();
+
+    expect(component.isSubmitting).toBe(false);
+    expect(component.errorMessage).toContain('après 30 secondes');
   });
 });

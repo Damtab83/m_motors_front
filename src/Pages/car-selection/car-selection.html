@@ -1,0 +1,61 @@
+<main class="selection-page">
+  <h1>{{ isEditing() ? 'Modifier mes choix' : 'Choisir les options du véhicule' }}</h1>
+
+  @if (loading()) {
+    <p role="status">Chargement…</p>
+  } @else if (pageError()) {
+    <p class="message error" role="alert">{{ pageError() }}</p>
+    <a matButton routerLink="/customer-panel">Retour à mon espace client</a>
+  } @else if (car(); as selectedCar) {
+    <section class="selected-car" aria-label="Véhicule sélectionné">
+      <h2>{{ selectedCar.brand }} {{ selectedCar.model }}</h2>
+      <p>{{ selectedCar.motorisation }} · {{ selectedCar.kilometer }} km · {{ selectedCar.price }} €</p>
+    </section>
+
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <label for="offerType">Type d’offre</label>
+      <select id="offerType" formControlName="offerType">
+        <option value="" disabled>Choisir une option</option>
+        @for (offer of offerTypes; track offer.value) {
+          <option [value]="offer.value">{{ offer.label }}</option>
+        }
+      </select>
+      @if (form.controls.offerType.touched && form.controls.offerType.invalid) {
+        <p class="message error" role="alert">Choisissez une offre.</p>
+      }
+
+      <label class="checkbox-option">
+        <input type="checkbox" formControlName="subscriptionInsurance">
+        Ajouter une assurance
+      </label>
+
+      <label class="checkbox-option">
+        <input type="checkbox" formControlName="hasTradeIn">
+        Je souhaite faire reprendre un véhicule
+      </label>
+
+      @if (form.controls.hasTradeIn.value) {
+        <fieldset>
+          <legend>Véhicule à reprendre</legend>
+          <label for="tradeBrand">Marque</label>
+          <input id="tradeBrand" type="text" formControlName="tradeBrand">
+          <label for="tradeModel">Modèle</label>
+          <input id="tradeModel" type="text" formControlName="tradeModel">
+          <label for="tradePrice">Valeur estimée (€)</label>
+          <input id="tradePrice" type="number" min="0" formControlName="tradePrice">
+        </fieldset>
+      }
+
+      @if (errorMessage()) {
+        <p class="message error" role="alert">{{ errorMessage() }}</p>
+      }
+
+      <div class="form-actions">
+        <a matButton routerLink="/customer-panel">Annuler</a>
+        <button matButton type="submit" [disabled]="saving()">
+          {{ saving() ? 'Enregistrement…' : (isEditing() ? 'Enregistrer les modifications' : 'Ajouter à mes véhicules') }}
+        </button>
+      </div>
+    </form>
+  }
+</main>

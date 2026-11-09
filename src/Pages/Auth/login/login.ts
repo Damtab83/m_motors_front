@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { finalize, TimeoutError, timeout } from 'rxjs';
 import { ValidateButton } from '../../../Components/validate-button/validate-button';
 import { LoginRegisterService } from '../../../app/services/loginRegister/login-register-service';
 import { AuthSessionService } from '../../../app/services/auth-session-service';
@@ -45,7 +45,10 @@ export class Login {
     this.isSubmitting = true;
     this.loginRegisterService
       .login(this.form.getRawValue())
-      .pipe(finalize(() => (this.isSubmitting = false)))
+      .pipe(
+        timeout({ first: 30_000 }),
+        finalize(() => (this.isSubmitting = false)),
+      )
       .subscribe({
         next: (user) => {
           try {
@@ -71,6 +74,10 @@ export class Login {
   }
 
   private getErrorMessage(error: unknown): string {
+    if (error instanceof TimeoutError) {
+      return "Le serveur n’a pas répondu après 30 secondes. Vérifie son état et la configuration CORS, puis réessaie.";
+    }
+
     if (error instanceof Error && !(error instanceof HttpErrorResponse)) {
       return error.message;
     }

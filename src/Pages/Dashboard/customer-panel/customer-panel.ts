@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { OrderCarModel, OfferType } from '../../../app/models/orderCar-model';
 import { AuthenticatedUser, AuthSessionService } from '../../../app/services/auth-session-service';
@@ -6,7 +7,7 @@ import { UserService } from '../../../app/services/user/user-service';
 
 @Component({
   selector: 'app-customer-panel',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './customer-panel.html',
   styleUrl: './customer-panel.css',
 })
@@ -58,7 +59,7 @@ export class CustomerPanel implements OnInit {
 
   protected offerLabel(offerType: OfferType): string {
     switch (offerType) {
-      case OfferType.Buy:
+      case OfferType.BUY:
         return 'Achat';
       case OfferType.RENT:
         return 'Location';

@@ -27,13 +27,23 @@
                   <h3>{{ order.car?.brand }} {{ order.car?.model }}</h3>
                   <p>{{ offerLabel(order.offerType) }}</p>
                 </div>
-                <button
-                  type="button"
-                  (click)="toggleOrderDetails(index)"
-                  [attr.aria-expanded]="selectedOrderIndex() === index"
-                >
-                  {{ selectedOrderIndex() === index ? 'Masquer les détails' : 'Voir les détails' }}
-                </button>
+                <div class="order-actions">
+                  @if (order.id && order.car?.carId; as carId) {
+                    <a
+                      class="action-button"
+                      [routerLink]="['/car', carId, 'selection', order.id]"
+                    >
+                      Modifier les choix
+                    </a>
+                  }
+                  <button
+                    type="button"
+                    (click)="toggleOrderDetails(index)"
+                    [attr.aria-expanded]="selectedOrderIndex() === index"
+                  >
+                    {{ selectedOrderIndex() === index ? 'Masquer les détails' : 'Voir les détails' }}
+                  </button>
+                </div>
               </div>
 
               @if (selectedOrderIndex() === index) {

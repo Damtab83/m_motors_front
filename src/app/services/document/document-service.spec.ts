@@ -21,12 +21,12 @@ describe('DocumentService', () => {
     httpTestingController.verify();
   });
 
-  it('should upload a PDF as multipart field file', () => {
+  it('should upload a PDF to the upload endpoint as multipart field file', () => {
     const pdf = new File(['pdf content'], 'car-document.pdf', { type: 'application/pdf' });
 
     service.uploadDocument(pdf).subscribe();
 
-    const request = httpTestingController.expectOne(`${environment.apiUrl}/document`);
+    const request = httpTestingController.expectOne(`${environment.apiUrl}/document/upload`);
     expect(request.request.method).toBe('POST');
     expect(request.request.body).toBeInstanceOf(FormData);
     expect((request.request.body as FormData).get('file')).toBe(pdf);

@@ -3,6 +3,15 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { OrderCarModel } from '../../models/orderCar-model';
+import { CarModel } from '../../models/car-model';
+import { OldCarModel } from '../../models/old-car-model';
+import { UserModel } from '../../models/user-model';
+
+export type OrderCarRequest = Omit<OrderCarModel, 'car' | 'tradeOldCar' | 'user'> & {
+  car: Pick<CarModel, 'carId'>;
+  tradeOldCar: Pick<OldCarModel, 'oldCarId'> | null;
+  user: Pick<UserModel, 'id'>;
+};
 
 @Injectable({
   providedIn: 'root',
@@ -19,11 +28,11 @@ export class OrderCarService {
     return this.http.get<OrderCarModel>(`${this.apiUrl}/${id}`);
   }
 
-  createOrder(order: OrderCarModel): Observable<OrderCarModel> {
+  createOrder(order: OrderCarRequest): Observable<OrderCarModel> {
     return this.http.post<OrderCarModel>(this.apiUrl, order);
   }
 
-  updateOrder(id: number, order: OrderCarModel): Observable<OrderCarModel> {
+  updateOrder(id: number, order: OrderCarRequest): Observable<OrderCarModel> {
     return this.http.put<OrderCarModel>(`${this.apiUrl}/${id}`, order);
   }
 

@@ -1,7 +1,7 @@
 <div class="container-car">
-  @if (loading) {
+  @if (loading()) {
     <p>Chargement de la voiture...</p>
-  } @else if (car; as selectedCar) {
+  } @else if (car(); as selectedCar) {
     <section class="car-details">
       <h1>{{ selectedCar.brand }}</h1>
       <div class="show-car">
@@ -18,12 +18,14 @@
 
       <div class="button-action">
         <a matButton routerLink="/shop-car"><mat-icon>arrow_back</mat-icon> Retour à la liste des voitures</a>
-        <a matButton>Ajouter au panier</a>
+        <a matButton [routerLink]="['/car', carId(), 'selection']">
+          Ajouter au panier
+        </a>
       </div>
     </section>
   } @else {
     <section class="car-details">
-      <h1>{{ errorMessage || 'Voiture introuvable' }}</h1>
+      <h1>{{ errorMessage() || 'Voiture introuvable' }}</h1>
       <a matButton routerLink="/shop-car">Retour à la liste des voitures</a>
     </section>
   }

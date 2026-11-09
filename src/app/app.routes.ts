@@ -10,6 +10,7 @@ import { NoticeLegal } from '../Pages/notice-legal/notice-legal';
 import { SalesConditions } from '../Pages/sales-conditions/sales-conditions';
 import { CustomerPanel } from '../Pages/Dashboard/customer-panel/customer-panel';
 import { AdminPanel } from '../Pages/Dashboard/admin-panel/admin-panel';
+import { CarSelection } from '../Pages/car-selection/car-selection';
 import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
@@ -17,6 +18,8 @@ export const routes: Routes = [
   {path: 'home', component: Home},
   {path: 'shop-car', component: CarList},
   {path: 'car/:id', component: Car},
+  {path: 'car/:id/selection', component: CarSelection, canActivate: [roleGuard('Custom')]},
+  {path: 'car/:id/selection/:orderId', component: CarSelection, canActivate: [roleGuard('Custom')]},
   {path: 'login', component: Login},
   {path: 'register', component: Register},
   {path: 'contact', component: Contact},

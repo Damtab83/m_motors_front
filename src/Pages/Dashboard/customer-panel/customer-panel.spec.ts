@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import { CustomerPanel } from './customer-panel';
@@ -45,7 +46,7 @@ describe('CustomerPanel', () => {
             price: 0,
           },
           subscriptionInsurance: false,
-          offerType: OfferType.Buy,
+          offerType: OfferType.BUY,
           user: orderOwner,
           testDriving: {
             dateTime: '2026-11-05T10:00:00',
@@ -61,6 +62,7 @@ describe('CustomerPanel', () => {
     await TestBed.configureTestingModule({
       imports: [CustomerPanel],
       providers: [
+        provideRouter([]),
         {
           provide: AuthSessionService,
           useValue: { getUser: () => sessionCustomer },
@@ -85,6 +87,10 @@ describe('CustomerPanel', () => {
     expect(fixture.nativeElement.textContent).toContain('jean@example.com');
     expect(fixture.nativeElement.textContent).toContain('Renault Clio');
     expect(fixture.nativeElement.textContent).toContain('Achat');
+    const editLink = fixture.nativeElement.querySelector(
+      '.order-summary .action-button',
+    ) as HTMLAnchorElement;
+    expect(editLink.getAttribute('href')).toBe('/car/3/selection/12');
   });
 
   it('should show vehicle details and the planned test drive when requested', () => {
