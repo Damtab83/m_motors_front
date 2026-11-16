@@ -61,3 +61,19 @@ fieldset {
 .message.error {
   color: #b00020;
 }
+
+@media (max-width: 600px) {
+  .selection-page {
+    width: 100%;
+    margin: 1rem auto;
+  }
+
+  .selected-car,
+  form {
+    padding: 1rem;
+  }
+
+  .form-actions {
+    justify-content: stretch;
+  }
+}

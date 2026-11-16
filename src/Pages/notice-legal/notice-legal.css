@@ -2,9 +2,8 @@
   display: block;
   background-color: #580ce4;
   padding: 1rem;
-  margin: 1vh 0 1vh 2vw;
-  width: 75vw;
-  height: 90vh;
+  box-sizing: border-box;
+  min-height: calc(100vh - 2rem);
 }
 
 .notice-legal {
@@ -13,22 +12,39 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 90vh;
+  min-height: calc(100vh - 4rem);
   color: #e40c0c;
   border-radius: 15px;
 }
 
 h1 {
-  font-size: 3rem;
+  font-size: clamp(1.75rem, 5vw, 3rem);
   text-decoration: underline;
-  margin: 4;
+  margin: 1rem;
   text-shadow: 2px 2px #e5bcbc;
 }
 
 .notice-legal-content {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
   text-align: start;
   margin: 2rem;
   line-height: 1.5;
-  width: 60%;
+  width: min(60%, 60rem);
+}
+
+@media (max-width: 800px) {
+  :host {
+    min-height: calc(100dvh - 1.5rem);
+    padding: 0.75rem;
+  }
+
+  .notice-legal {
+    min-height: calc(100dvh - 3rem);
+    padding: 1rem 0.5rem;
+  }
+
+  .notice-legal-content {
+    width: 100%;
+    margin: 0.5rem;
+  }
 }

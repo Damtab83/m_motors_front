@@ -68,4 +68,12 @@
   .car-form {
     grid-template-columns: 1fr;
   }
+
+  .details-header {
+    align-items: flex-start;
+  }
+
+  .custom-details {
+    padding: 0.75rem;
+  }
 }

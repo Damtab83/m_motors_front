@@ -4,9 +4,8 @@
   isolation: isolate;
   background-color: #868489;
   padding: 1rem;
-  margin: 1vh 0 1vh 2vw;
-  max-width: 75vw;
-  height: 90vh;
+  box-sizing: border-box;
+  min-height: calc(100vh - 2rem);
 }
 
 /* :host::before {
@@ -26,7 +25,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 90vh;
+  min-height: calc(100vh - 4rem);
   color: #e40c0c;
 }
 
@@ -74,4 +73,25 @@ p {
   align-items: center;
   gap: 1rem;
   margin-top: 2rem;
+}
+
+@media (max-width: 800px) {
+  :host {
+    min-height: calc(100dvh - 1.5rem);
+    padding: 0.75rem;
+  }
+
+  .container-car {
+    min-height: calc(100dvh - 3rem);
+  }
+
+  .show-car,
+  .button-action {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .car-details img {
+    max-height: 40vh;
+  }
 }

@@ -4,9 +4,8 @@
   isolation: isolate;
   background-color: #868489;
   padding: 1rem;
-  margin: 1vh 0 1vh 2vw;
-  width: 75vw;
-  height: 90vh;
+  box-sizing: border-box;
+  min-height: calc(100vh - 2rem);
 }
 
 :host::before {
@@ -26,13 +25,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 60vh;
+  min-height: 60vh;
   color: #e40c0c;
 }
 
 h1 {
-  font-size: 5rem;
-  height: stretch;
+  font-size: clamp(2rem, 6vw, 5rem);
+  text-align: center;
   text-shadow: 2px 2px #e5bcbc;
 }
 
@@ -46,8 +45,8 @@ h1 {
 }
 
 h6 {
-  font-size: 3rem;
-  height: stretch;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  text-align: center;
   text-shadow: 2px 2px #e5bcbc;
 }
 
@@ -61,4 +60,19 @@ h6 {
   text-align: center;
   margin-top: 2rem;
   color: #e40c0c;
+}
+
+@media (max-width: 800px) {
+  :host {
+    min-height: calc(100dvh - 1.5rem);
+    padding: 0.75rem;
+  }
+
+  .container-carList {
+    min-height: 0;
+  }
+
+  .show-car {
+    gap: 1rem;
+  }
 }

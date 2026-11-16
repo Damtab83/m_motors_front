@@ -2,9 +2,8 @@
   display: block;
   background-color: #580ce4;
   padding: 1rem;
-  margin: 1vh 0 1vh 2vw;
-  width: 75vw;
-  height: 90vh;
+  box-sizing: border-box;
+  min-height: calc(100vh - 2rem);
 }
 
 .sales-conditions {
@@ -13,22 +12,39 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 90vh;
+  min-height: calc(100vh - 4rem);
   color: #e40c0c;
   border-radius: 15px;
 }
 
 h1 {
-  font-size: 3rem;
+  font-size: clamp(1.75rem, 5vw, 3rem);
   text-decoration: underline;
-  margin: 4;
+  margin: 1rem;
   text-shadow: 2px 2px #e5bcbc;
 }
 
 .sales-conditions-content {
-  font-size: 1.5rem;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
   text-align: start;
   margin: 1rem;
   line-height: 1.5;
-  width: 70%;
+  width: min(70%, 60rem);
+}
+
+@media (max-width: 800px) {
+  :host {
+    min-height: calc(100dvh - 1.5rem);
+    padding: 0.75rem;
+  }
+
+  .sales-conditions {
+    min-height: calc(100dvh - 3rem);
+    padding: 1rem 0.5rem;
+  }
+
+  .sales-conditions-content {
+    width: 100%;
+    margin: 0.5rem;
+  }
 }

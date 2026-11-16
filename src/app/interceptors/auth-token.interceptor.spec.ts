@@ -32,10 +32,31 @@ describe('authTokenInterceptor', () => {
   });
 
   it('should attach the bearer token to API requests', () => {
-    http.get(`${environment.apiUrl}/client/1`).subscribe();
+    http.post(`${environment.apiUrl}/commande`, {}).subscribe();
 
-    const request = httpTestingController.expectOne(`${environment.apiUrl}/client/1`);
+    const request = httpTestingController.expectOne(`${environment.apiUrl}/commande`);
     expect(request.request.headers.get('Authorization')).toBe('Bearer test-token');
+    request.flush({});
+  });
+
+  it.each([
+    `${environment.apiUrl}/client`,
+    `${environment.apiUrl}/client/1`,
+    `${environment.apiUrl}/voiture`,
+    `${environment.apiUrl}/voiture/1`,
+  ])('should not attach the bearer token to public reads: %s', (url) => {
+    http.get(url).subscribe();
+
+    const request = httpTestingController.expectOne(url);
+    expect(request.request.headers.has('Authorization')).toBe(false);
+    request.flush([]);
+  });
+
+  it('should keep the bearer token on car writes', () => {
+    http.post(`${environment.apiUrl}/voiture`, {}).subscribe();
+
+    const request = httpTestingController.expectOne(`${environment.apiUrl}/voiture`);
+    expect(request.request.headers.has('Authorization')).toBe(true);
     request.flush({});
   });
 

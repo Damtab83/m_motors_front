@@ -46,6 +46,28 @@ describe('NavMenu', () => {
     expect(text).not.toContain('Déconnexion');
   });
 
+  it('should open and close the mobile navigation menu', () => {
+    fixture.detectChanges();
+
+    const toggle = fixture.nativeElement.querySelector('.menu-toggle') as HTMLButtonElement;
+    const nav = fixture.nativeElement.querySelector('.nav-bar') as HTMLElement;
+
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(nav.classList.contains('menu-open')).toBe(false);
+
+    toggle.click();
+    fixture.detectChanges();
+
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(nav.classList.contains('menu-open')).toBe(true);
+
+    toggle.click();
+    fixture.detectChanges();
+
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(nav.classList.contains('menu-open')).toBe(false);
+  });
+
   it('should show account and logout links when signed in', () => {
     fixture.destroy();
     authenticatedUser = {

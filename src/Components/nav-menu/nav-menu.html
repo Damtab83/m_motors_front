@@ -1,15 +1,27 @@
-<div class="nav-bar">
-  <div class="header-menu">
-    <a matButton [routerLink]="['/home']">
+<nav class="nav-bar" [class.menu-open]="menuOpen" aria-label="Navigation principale">
+  <button
+    mat-icon-button
+    class="menu-toggle"
+    type="button"
+    aria-controls="primary-navigation"
+    [attr.aria-expanded]="menuOpen"
+    [attr.aria-label]="menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'"
+    (click)="toggleMenu()">
+    <mat-icon>{{ menuOpen ? 'close' : 'menu' }}</mat-icon>
+  </button>
+
+  <div class="menu-content" id="primary-navigation">
+    <div class="header-menu">
+    <a matButton [routerLink]="['/home']" (click)="closeMenu()">
       <mat-icon>home</mat-icon>
       Home
     </a>
-    <a matButton [routerLink]="['/shop-car']">
+    <a matButton [routerLink]="['/shop-car']" (click)="closeMenu()">
       <mat-icon>directions_car</mat-icon>
       Cars
     </a>
     @if (dashboardLink; as destination) {
-      <a matButton [routerLink]="[destination]">
+      <a matButton [routerLink]="[destination]" (click)="closeMenu()">
         <mat-icon>account_circle</mat-icon>
         Mon compte
       </a>
@@ -18,18 +30,16 @@
         Déconnexion
       </a>
     } @else {
-      <a matButton [routerLink]="['/login']">
+      <a matButton [routerLink]="['/login']" (click)="closeMenu()">
         <mat-icon>login</mat-icon>
         Connexion
       </a>
-      <a matButton [routerLink]="['/register']">
+      <a matButton [routerLink]="['/register']" (click)="closeMenu()">
         <mat-icon>person_add</mat-icon>
         Inscription
       </a>
     }
   </div>
-  <mat-slide-toggle>Toggle me!</mat-slide-toggle>
-
 
   <div class="footer">
     <p>
@@ -39,26 +49,24 @@
       <span>Copyright {{this.myYear}}</span>
     </p>
     <p>
-      <a mat-button [routerLink]="['/sales-conditions']">
+      <a mat-button [routerLink]="['/sales-conditions']" (click)="closeMenu()">
         <mat-icon>description</mat-icon>
         <span>CGV</span>
       </a>
     </p>
     <p>
-      <a mat-button [routerLink]="['/notice-legal']">
+      <a mat-button [routerLink]="['/notice-legal']" (click)="closeMenu()">
       <mat-icon>gavel</mat-icon>
       <span>Mentions Légales</span>
       </a>
     </p>
     <p>
-      <a mat-button [routerLink]="['/contact']">
+      <a mat-button [routerLink]="['/contact']" (click)="closeMenu()">
       <mat-icon>call</mat-icon>
       <span>Contact</span>
       </a>
     </p>  
-    
   </div>  
-</div>  
-
-
+</div>
+</nav>
   

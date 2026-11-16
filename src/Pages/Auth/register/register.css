@@ -3,17 +3,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   background-color: #71bcd5;
-  height: 70vh;
-  width: 40vw;
-  margin: 15vh auto;
+  width: min(100% - 2rem, 32rem);
+  min-height: 70vh;
+  margin: 4rem auto;
+  padding: 2rem 1rem;
   border-radius: 2rem;
   box-shadow: 1px 1px 10px #2ff61080;
 }
 
 h1 {
   font-size: 2.25rem;
-  margin: 0 0 10vh;
+  margin: 0 0 2rem;
 }
 
 form {
@@ -24,7 +26,7 @@ form {
 }
 
 mat-form-field {
-  width: 75%;
+  width: min(75%, 24rem);
 }
 
 .form-message {
@@ -38,4 +40,22 @@ mat-form-field {
 
 .success {
   color: #245c2a;
+}
+
+@media (max-width: 600px) {
+  :host {
+    width: 100%;
+    min-height: auto;
+    margin: 1rem auto;
+    padding: 1.5rem 0.75rem;
+    border-radius: 1rem;
+  }
+
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
 }

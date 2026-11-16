@@ -3,9 +3,8 @@
   background-color: #580ce4;
   background-image: url("../../../public/images/home.jpg");
   padding: 1rem;
-  margin: 1vh 0 1vh 2vw;
-  width: 75vw;
-  height: 90vh;
+  box-sizing: border-box;
+  min-height: calc(100vh - 2rem);
 }
 
 .container-home {
@@ -13,19 +12,20 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 90vh;
+  min-height: calc(100vh - 4rem);
   color: #e40c0c;
 }
 
 h1 {
-  font-size: 10rem;
-  height: stretch;
+  font-size: clamp(3rem, 11vw, 10rem);
   text-shadow: 2px 2px #e5bcbc;
+  text-align: center;
 }
 
 .description {
-  font-size: 4rem;
+  font-size: clamp(1.75rem, 5vw, 4rem);
   text-shadow: 2px 2px #e5bcbc;
+  text-align: center;
 }
 
 .comment {
@@ -40,4 +40,15 @@ h1 {
   color: #1b5e20;
   font-size: 1.25rem;
   font-weight: 600;
+}
+
+@media (max-width: 800px) {
+  :host {
+    min-height: calc(100dvh - 1.5rem);
+    padding: 0.75rem;
+  }
+
+  .container-home {
+    min-height: calc(100dvh - 3rem);
+  }
 }

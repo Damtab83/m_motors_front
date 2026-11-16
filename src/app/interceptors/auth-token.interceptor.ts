@@ -8,6 +8,8 @@ const publicAuthenticationPaths = [
   '/authentification/inscription',
 ];
 
+const publicReadPaths = ['/client', '/voiture'];
+
 export const authTokenInterceptor: HttpInterceptorFn = (request, next) => {
   const token = inject(AuthSessionService).getToken();
   const isApiRequest =
@@ -16,8 +18,12 @@ export const authTokenInterceptor: HttpInterceptorFn = (request, next) => {
   const isPublicAuthenticationRequest = publicAuthenticationPaths.some((path) =>
     request.url.startsWith(`${environment.apiUrl}${path}`),
   );
+  const apiPath = isApiRequest ? request.url.slice(environment.apiUrl.length) : '';
+  const isPublicReadRequest =
+    request.method === 'GET' &&
+    publicReadPaths.some((path) => apiPath === path || apiPath.startsWith(`${path}/`));
 
-  if (!token || !isApiRequest || isPublicAuthenticationRequest) {
+  if (!token || !isApiRequest || isPublicAuthenticationRequest || isPublicReadRequest) {
     return next(request);
   }
 
