@@ -5,11 +5,13 @@ import { of, throwError } from 'rxjs';
 import { Car } from './car';
 import { CarService } from '../../app/services/car/car-service';
 import { CarModel } from '../../app/models/car-model';
+import { DocumentService } from '../../app/services/document/document-service';
 
 describe('Car', () => {
   let component: Car;
   let fixture: ComponentFixture<Car>;
   let carService: { getCarById: ReturnType<typeof vi.fn> };
+  let documentService: { getDocumentById: ReturnType<typeof vi.fn> };
   const car: CarModel = {
     brand: 'Mercedes',
     model: 'Classe A',
@@ -21,6 +23,16 @@ describe('Car', () => {
 
   beforeEach(async () => {
     carService = { getCarById: vi.fn().mockReturnValue(of(car)) };
+    documentService = {
+      getDocumentById: vi.fn().mockReturnValue(
+        of({
+          id: 1,
+          name: 'fiche.pdf',
+          mimeType: 'application/pdf',
+          contenu: 'JVBERi0xLjQ=',
+        }),
+      ),
+    };
 
     await TestBed.configureTestingModule({
       imports: [Car],
@@ -30,6 +42,7 @@ describe('Car', () => {
           useValue: { snapshot: { paramMap: convertToParamMap({ id: '1' }) } },
         },
         { provide: CarService, useValue: carService },
+        { provide: DocumentService, useValue: documentService },
       ],
     }).compileComponents();
 
@@ -65,5 +78,32 @@ describe('Car', () => {
       'Impossible de charger cette voiture.',
     );
     expect(fixture.nativeElement.textContent).not.toContain('Chargement');
+  });
+
+  it('should download document 1 from the car details', () => {
+    const createObjectURL = vi.fn().mockReturnValue('blob:document');
+    const originalCreateObjectURL = Object.getOwnPropertyDescriptor(URL, 'createObjectURL');
+    Object.defineProperty(URL, 'createObjectURL', {
+      configurable: true,
+      value: createObjectURL,
+    });
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+
+    fixture.detectChanges();
+    const downloadButton: HTMLButtonElement = fixture.nativeElement.querySelector('.document-upload button');
+    downloadButton.click();
+    fixture.detectChanges();
+
+    expect(documentService.getDocumentById).toHaveBeenCalledWith(1);
+    expect(createObjectURL).toHaveBeenCalledWith(expect.any(Blob));
+    expect(clickSpy).toHaveBeenCalled();
+    expect(fixture.nativeElement.textContent).toContain('Le téléchargement du PDF a commencé.');
+
+    clickSpy.mockRestore();
+    if (originalCreateObjectURL) {
+      Object.defineProperty(URL, 'createObjectURL', originalCreateObjectURL);
+    } else {
+      Reflect.deleteProperty(URL, 'createObjectURL');
+    }
   });
 });

@@ -6,6 +6,8 @@ export interface CarModel {
   kilometer: number;
   price: number;
   testDriving: boolean | null;
-  imageCar?: string;
+  imageCar?: string | null;
+  imageCarId?: number;
+  imageLoadError?: boolean;
   ordersCars?: string;
 }

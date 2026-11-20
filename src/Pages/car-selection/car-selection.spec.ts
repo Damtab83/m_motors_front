@@ -76,11 +76,11 @@ describe('CarSelection', () => {
     component.save();
 
     expect(orderCarService.createOrder).toHaveBeenCalledWith({
-      car: { carId: car.carId },
-      user: { id: user.id },
+      carId: car.carId,
+      userId: user.id,
       offerType: 'BUY',
       subscriptionInsurance: true,
-      tradeOldCar: null,
+      oldCarId: null,
     });
     expect(router.navigateByUrl).toHaveBeenCalledWith('/customer-panel');
   });

@@ -22,7 +22,7 @@ describe('TestDriveService', () => {
   });
 
   it('should create an unconfirmed test drive with its selected date', () => {
-    const testDrive = { testDate: '2026-11-05', confirmed: false };
+    const testDrive = { testDate: '2026-11-05T10:30', confirmed: false, carId: 7 };
 
     service.createTestDrive(testDrive).subscribe();
 

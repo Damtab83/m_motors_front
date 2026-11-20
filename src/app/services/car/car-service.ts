@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CarModel } from '../../models/car-model';
+import { ImageCarService } from '../imageCar/image-car-service';
 
 interface ApiCar {
   carId?: number;
@@ -12,13 +13,22 @@ interface ApiCar {
   motorisation: string;
   kilometer: number;
   price: number;
-  testDriving?: boolean | null;
+  testDriving?: boolean | { confirmed?: boolean | null } | null;
   imageCar?: string | null;
+  imageCarId?: number | null;
+  images?: Array<number | ApiImage> | null;
+  imageCars?: Array<number | ApiImage> | null;
 }
 
 interface ApiCarCollection {
   value: ApiCar[];
   Count: number;
+}
+
+interface ApiImage {
+  imageCarId?: number;
+  contentType?: string;
+  imageData?: string;
 }
 
 @Injectable({
@@ -27,22 +37,32 @@ interface ApiCarCollection {
 export class CarService {
 
   private http = inject(HttpClient);
+  private readonly imageCarService = inject(ImageCarService);
 
   private apiUrl = `${environment.apiUrl}/voiture`;
 
+  private readonly carRequestTimeout = 15_000;
+  private readonly imageRequestTimeout = 8_000;
 
   getAllCars(): Observable<CarModel[]> {
     return this.http.get<ApiCar[] | ApiCarCollection>(this.apiUrl).pipe(
+      timeout({ first: this.carRequestTimeout }),
       map((response) => {
         const cars = Array.isArray(response) ? response : response.value;
-        return cars.map((car) => this.toCarModel(car));
+        return cars;
       }),
+      switchMap((cars) =>
+        cars.length === 0
+          ? of([])
+          : forkJoin(cars.map((car) => this.toCarModelWithImage(car))),
+      ),
     );
   }
 
   getCarById(id: number): Observable<CarModel> {
     return this.http.get<ApiCar>(`${this.apiUrl}/${id}`).pipe(
-      map((car) => this.toCarModel(car)),
+      timeout({ first: this.carRequestTimeout }),
+      switchMap((car) => this.toCarModelWithImage(car)),
     );
   }
 
@@ -63,6 +83,7 @@ export class CarService {
   }
 
   private toCarModel(car: ApiCar): CarModel {
+    const testDriving = car.testDriving;
     return {
       carId: car.carId ?? car.id,
       brand: car.brand,
@@ -70,8 +91,54 @@ export class CarService {
       motorisation: car.motorisation,
       kilometer: car.kilometer,
       price: car.price,
-      testDriving: car.testDriving ?? null,
+      testDriving:
+        typeof testDriving === 'object' && testDriving !== null
+          ? testDriving.confirmed ?? null
+          : testDriving ?? null,
       imageCar: car.imageCar ?? undefined,
+      ...((car.imageCarId ?? this.getImageId(car)) !== undefined
+        ? { imageCarId: car.imageCarId ?? this.getImageId(car) }
+        : {}),
     };
+  }
+
+  private toCarModelWithImage(car: ApiCar): Observable<CarModel> {
+    const model = this.toCarModel(car);
+    const imageId = model.imageCarId;
+    if (imageId === undefined || model.imageCar) {
+      return of(model);
+    }
+
+    const embeddedImage = this.getImages(car).find(
+      (image): image is ApiImage => typeof image !== 'number' && Boolean(image.imageData),
+    );
+    if (embeddedImage?.imageData && embeddedImage.contentType) {
+      return of({
+        ...model,
+        imageCar: `data:${embeddedImage.contentType};base64,${embeddedImage.imageData}`,
+      });
+    }
+
+    return this.imageCarService.getImageById(imageId).pipe(
+      timeout({ first: this.imageRequestTimeout }),
+      map((image) => ({
+        ...model,
+        imageCar:
+          image.imageData && image.contentType
+            ? `data:${image.contentType};base64,${image.imageData}`
+            : undefined,
+        imageCarId: image.imageCarId ?? imageId,
+      })),
+      catchError(() => of({ ...model, imageLoadError: true })),
+    );
+  }
+
+  private getImages(car: ApiCar): Array<number | ApiImage> {
+    return car.images ?? car.imageCars ?? [];
+  }
+
+  private getImageId(car: ApiCar): number | undefined {
+    const firstImage = this.getImages(car)[0];
+    return typeof firstImage === 'number' ? firstImage : firstImage?.imageCarId;
   }
 }

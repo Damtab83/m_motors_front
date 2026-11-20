@@ -10,10 +10,10 @@ export enum OfferType {
 
 export interface OrderCarModel {
   id?: number;
-  car?: CarModel;
-  tradeOldCar: OldCarModel | null;
+  car?: Pick<CarModel, 'carId'> & Partial<CarModel>;
+  tradeOldCar: (Pick<OldCarModel, 'oldCarId'> & Partial<OldCarModel>) | null;
   subscriptionInsurance: boolean | null;
   offerType: OfferType;
-  user: UserModel;
+  user?: Pick<UserModel, 'id'> & Partial<UserModel>;
   testDriving?: TestDrivingModel | null;
 }

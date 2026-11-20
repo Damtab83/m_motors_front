@@ -155,11 +155,11 @@ export class CarSelection implements OnInit {
     }
 
     const order: OrderCarRequest = {
-      car: { carId },
-      user: { id: user.id },
+      carId,
+      userId: user.id,
       offerType: values.offerType,
       subscriptionInsurance: values.subscriptionInsurance,
-      tradeOldCar: null,
+      oldCarId: null,
     };
 
     const request = this.orderId === null

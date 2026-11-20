@@ -32,4 +32,27 @@ describe('DocumentService', () => {
     expect((request.request.body as FormData).get('file')).toBe(pdf);
     request.flush({ message: 'uploaded' });
   });
+
+  it('should retrieve a document by its identifier', () => {
+    let response: unknown;
+    service.getDocumentById(1).subscribe((document) => {
+      response = document;
+    });
+
+    const request = httpTestingController.expectOne(`${environment.apiUrl}/document/1`);
+    expect(request.request.method).toBe('GET');
+    request.flush({
+      id: 1,
+      name: 'fiche.pdf',
+      mimeType: 'application/pdf',
+      contenu: 'JVBERi0xLjQ=',
+    });
+
+    expect(response).toEqual({
+      id: 1,
+      name: 'fiche.pdf',
+      mimeType: 'application/pdf',
+      contenu: 'JVBERi0xLjQ=',
+    });
+  });
 });

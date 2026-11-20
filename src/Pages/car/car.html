@@ -7,12 +7,30 @@
       <div class="show-car">
         @if (selectedCar.imageCar) {
           <img [src]="selectedCar.imageCar" [alt]="'Photo de ' + selectedCar.brand + ' - ' + selectedCar.model">
+        } @else if (selectedCar.imageLoadError) {
+          <p role="status">Photo indisponible pour le moment.</p>
         }
         <div class="description">
           <p>{{ selectedCar.model }}</p>
           <p>Motorisation: {{ selectedCar.motorisation }}</p>
           <p>Kilomètre: {{ selectedCar.kilometer }} km</p>
           <p>Prix: {{ selectedCar.price }} EUR</p>
+          <div class="document-upload">
+            <button
+              matButton
+              type="button"
+              (click)="downloadDocument()"
+              [disabled]="documentDownloading()"
+            >
+              {{ documentDownloading() ? 'Téléchargement...' : 'Télécharger le PDF' }}
+            </button>
+            @if (documentSuccess()) {
+              <p class="document-message" role="status">{{ documentSuccess() }}</p>
+            }
+            @if (documentError()) {
+              <p class="document-message" role="alert">{{ documentError() }}</p>
+            }
+          </div>
         </div>
       </div>
 

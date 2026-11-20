@@ -23,11 +23,18 @@ export class ImageCarService {
     return this.http.post<ImageCarModel>(this.apiUrl, image);
   }
 
+  uploadImage(file: File, carId: number): Observable<ImageCarModel> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<ImageCarModel>(`${this.apiUrl}/upload/${carId}`, formData);
+  }
+
   updateImage(id: number, image: ImageCarModel): Observable<ImageCarModel> {
     return this.http.put<ImageCarModel>(`${this.apiUrl}/${id}`, image);
   }
 
-  deleteImage(id: number): Observable<ImageCarModel> {
-    return this.http.delete<ImageCarModel>(`${this.apiUrl}/${id}`);
+  deleteImage(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

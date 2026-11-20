@@ -62,6 +62,25 @@ h1 {
   text-decoration: none;
 }
 
+.test-drive-form {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 24rem;
+  margin-top: 1rem;
+}
+
+.test-drive-form label {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.test-drive-form input {
+  padding: 0.55rem;
+  border: 1px solid #aaa;
+  border-radius: 0.35rem;
+  font: inherit;
+}
+
 .order-details {
   margin-top: 1rem;
   padding-top: 1rem;
@@ -74,6 +93,10 @@ h1 {
 
 .message.error {
   color: #b00020;
+}
+
+.message.success {
+  color: #176b36;
 }
 
 @media (max-width: 600px) {

@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 export interface TestDriveRequest {
   testDate: string;
   confirmed: boolean;
+  carId?: number;
 }
 
 @Injectable({

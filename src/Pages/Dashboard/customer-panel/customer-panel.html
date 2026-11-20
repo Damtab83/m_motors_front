@@ -6,6 +6,10 @@
   } @else if (errorMessage()) {
     <p class="message error" role="alert">{{ errorMessage() }}</p>
   } @else if (customer(); as client) {
+    @if (warningMessage()) {
+      <p class="message error" role="alert">{{ warningMessage() }}</p>
+    }
+
     <section class="customer-card" aria-labelledby="customer-title">
       <h2 id="customer-title">Mes informations</h2>
       <p><strong>Prénom :</strong> {{ client.firstname }}</p>
@@ -28,6 +32,15 @@
                   <p>{{ offerLabel(order.offerType) }}</p>
                 </div>
                 <div class="order-actions">
+                  @if (order.car?.testDriving && order.id !== undefined && order.car?.carId !== undefined && !order.testDriving) {
+                    <button
+                      type="button"
+                      (click)="openTestDriveForm(order.id)"
+                      [disabled]="testDriveSaving()"
+                    >
+                      Demander un essai
+                    </button>
+                  }
                   @if (order.id && order.car?.carId; as carId) {
                     <a
                       class="action-button"
@@ -45,6 +58,41 @@
                   </button>
                 </div>
               </div>
+
+              @if (testDriveSuccessOrderId() === order.id) {
+                <p class="message success" role="status">
+                  Votre demande d’essai pour {{ order.car?.brand }} {{ order.car?.model }} a été enregistrée.
+                </p>
+              }
+
+              @if (testDriveOrderId() === order.id) {
+                <form
+                  class="test-drive-form"
+                  (submit)="$event.preventDefault(); requestTestDrive(order)"
+                >
+                  <label>
+                    Date et heure souhaitées
+                    <input
+                      type="datetime-local"
+                      name="testDate"
+                      [value]="testDriveDate()"
+                      (input)="updateTestDriveDate($event)"
+                      required
+                    >
+                  </label>
+                  @if (testDriveError()) {
+                    <p class="message error" role="alert">{{ testDriveError() }}</p>
+                  }
+                  <div class="order-actions">
+                    <button type="button" [disabled]="testDriveSaving()" (click)="closeTestDriveForm()">
+                      Annuler
+                    </button>
+                    <button type="submit" [disabled]="!testDriveDate() || testDriveSaving()">
+                      {{ testDriveSaving() ? 'Envoi...' : 'Envoyer la demande' }}
+                    </button>
+                  </div>
+                </form>
+              }
 
               @if (selectedOrderIndex() === index) {
                 <div class="order-details">

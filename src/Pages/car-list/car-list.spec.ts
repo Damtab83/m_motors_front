@@ -19,6 +19,15 @@ describe('CarList', () => {
       price: 25000,
       testDriving: null,
     },
+    {
+      carId: 2,
+      brand: 'BMW',
+      model: 'Série 3',
+      motorisation: '190CV',
+      kilometer: 80000,
+      price: 50000,
+      testDriving: null,
+    },
   ];
 
   beforeEach(async () => {
@@ -45,5 +54,22 @@ describe('CarList', () => {
     expect(fixture.nativeElement.textContent).toContain('Mercedes');
     expect(fixture.nativeElement.textContent).toContain('Classe A');
     expect(fixture.nativeElement.querySelector('a').getAttribute('href')).toBe('/car/1');
+    expect(fixture.nativeElement.textContent).toContain('BMW');
+  });
+
+  it('should filter cars by the selected maximum price and mileage', () => {
+    const priceSlider: HTMLInputElement =
+      fixture.nativeElement.querySelector('[aria-label="Prix maximum"]');
+    const kilometerSlider: HTMLInputElement =
+      fixture.nativeElement.querySelector('[aria-label="Kilométrage maximum"]');
+
+    priceSlider.value = '30000';
+    priceSlider.dispatchEvent(new Event('input'));
+    kilometerSlider.value = '20000';
+    kilometerSlider.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Mercedes');
+    expect(fixture.nativeElement.textContent).not.toContain('BMW');
   });
 });

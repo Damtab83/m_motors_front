@@ -37,4 +37,27 @@ describe('ImageCarService', () => {
     expect(request.request.body).toEqual(image);
     request.flush(image);
   });
+
+  it('should upload image bytes as multipart to the car upload endpoint', () => {
+    const image = new File(['image'], 'car.jpg', { type: 'image/jpeg' });
+    const response = { imageCarId: 5, name: 'car.jpg', size: image.size };
+
+    service.uploadImage(image, 12).subscribe((createdImage) => {
+      expect(createdImage).toEqual(response);
+    });
+
+    const request = httpTestingController.expectOne(`${environment.apiUrl}/image-voiture/upload/12`);
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toBeInstanceOf(FormData);
+    expect((request.request.body as FormData).get('file')).toBe(image);
+    request.flush(response);
+  });
+
+  it('should delete an image by ID', () => {
+    service.deleteImage(5).subscribe();
+
+    const request = httpTestingController.expectOne(`${environment.apiUrl}/image-voiture/5`);
+    expect(request.request.method).toBe('DELETE');
+    request.flush(null);
+  });
 });

@@ -1,13 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, TimeoutError, map, of, switchMap, timeout } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AdminNavBar, AdminSection } from '../../../Components/admin-nav-bar/admin-nav-bar';
-import { CustomDetails } from '../../custom-details/custom-details';
+import { CarEditorSubmission, CustomDetails } from '../../custom-details/custom-details';
 import { CarModel } from '../../../app/models/car-model';
 import { UserModel } from '../../../app/models/user-model';
 import { CarService } from '../../../app/services/car/car-service';
 import { DocumentService } from '../../../app/services/document/document-service';
+import { ImageCarService } from '../../../app/services/imageCar/image-car-service';
 import { TestDriveService } from '../../../app/services/test-drive/test-drive-service';
 import { UserService } from '../../../app/services/user/user-service';
 
@@ -21,6 +22,7 @@ export class AdminPanel implements OnInit {
   private readonly userService = inject(UserService);
   private readonly carService = inject(CarService);
   private readonly documentService = inject(DocumentService);
+  private readonly imageCarService = inject(ImageCarService);
   private readonly testDriveService = inject(TestDriveService);
 
   protected readonly selectedSection = signal<AdminSection>('users');
@@ -53,7 +55,13 @@ export class AdminPanel implements OnInit {
   }
 
   protected selectSection(section: AdminSection): void {
+    if (this.carEditorSaving()) {
+      return;
+    }
+
     this.selectedSection.set(section);
+    this.closeCarForm();
+    this.closeCustomerDetails();
 
     if (section === 'cars' && !this.carsLoaded) {
       this.loadCars();
@@ -203,7 +211,8 @@ export class AdminPanel implements OnInit {
     this.testDriveError.set('');
   }
 
-  protected saveCar(car: CarModel): void {
+  protected saveCar(submission: CarEditorSubmission): void {
+    const car = submission.car;
     const currentCar = this.editingCar();
     if (currentCar) {
       if (currentCar.carId === undefined) {
@@ -211,21 +220,85 @@ export class AdminPanel implements OnInit {
         return;
       }
 
-      this.persistCar(this.carService.updateCar(currentCar.carId, car), currentCar);
+      this.persistCar(this.carService.updateCar(currentCar.carId, car), currentCar, submission);
       return;
     }
 
-    this.persistCar(this.carService.createCar(car), null);
+    this.persistCar(this.carService.createCar(car), null, submission);
   }
 
-  private persistCar(request: Observable<CarModel>, currentCar: CarModel | null): void {
+  private persistCar(
+    request: Observable<CarModel>,
+    currentCar: CarModel | null,
+    submission: CarEditorSubmission,
+  ): void {
     this.carEditorError.set('');
     this.carEditorSaving.set(true);
-    request.subscribe({
-      next: (savedCar) => {
-        const carToStore = currentCar
-          ? { ...savedCar, carId: currentCar.carId }
-          : savedCar;
+    request.pipe(
+      switchMap((savedCar) => {
+        const carId = savedCar.carId ?? currentCar?.carId;
+        if (submission.imageFile) {
+          if (carId === undefined) {
+            throw new Error('The saved car response did not include a car ID.');
+          }
+
+          return this.imageCarService.uploadImage(submission.imageFile, carId).pipe(
+            switchMap((uploadedImage) => {
+              if (uploadedImage.imageCarId === undefined) {
+                throw new Error('The image upload response did not include an image ID.');
+              }
+
+              const removeOldImage =
+                currentCar?.imageCarId !== undefined &&
+                currentCar.imageCarId !== uploadedImage.imageCarId;
+              const oldImageId = removeOldImage ? currentCar?.imageCarId : undefined;
+              const deleteOldImage = oldImageId !== undefined
+                ? this.imageCarService.deleteImage(oldImageId)
+                : of(undefined);
+              return deleteOldImage.pipe(
+                map(() => ({ savedCar, uploadedImage })),
+              );
+            }),
+          );
+        }
+
+        if (submission.removeImage && submission.imageCarId !== undefined) {
+          return this.imageCarService.deleteImage(submission.imageCarId).pipe(
+            map(() => ({ savedCar, uploadedImage: null })),
+          );
+        }
+
+        if (submission.removeImage) {
+          throw new Error('The image ID is unavailable; the existing image cannot be deleted.');
+        }
+
+        return of({ savedCar, uploadedImage: null });
+      }),
+      timeout({ first: 45_000 }),
+    ).subscribe({
+      next: ({ savedCar, uploadedImage }) => {
+        const uploadedData = submission.imageFile
+          ? submission.imagePreview
+          : uploadedImage?.imageData && uploadedImage.contentType
+            ? `data:${uploadedImage.contentType};base64,${uploadedImage.imageData}`
+            : undefined;
+        const carToStore: CarModel = {
+          ...savedCar,
+          carId: currentCar?.carId ?? savedCar.carId,
+          ...(uploadedImage
+            ? {
+                imageCarId: uploadedImage.imageCarId,
+                imageCar: uploadedData,
+              }
+            : submission.removeImage
+              ? { imageCarId: undefined, imageCar: null }
+              : currentCar
+                ? {
+                    imageCarId: currentCar.imageCarId,
+                    imageCar: currentCar.imageCar,
+                  }
+                : {}),
+        };
         this.cars.update((cars) =>
           currentCar
             ? cars.map((existingCar) =>
@@ -238,8 +311,12 @@ export class AdminPanel implements OnInit {
         this.carEditorSaving.set(false);
         this.closeCarForm();
       },
-      error: () => {
-        this.carEditorError.set('Impossible d’enregistrer la voiture. Réessayez.');
+      error: (error: unknown) => {
+        this.carEditorError.set(error instanceof TimeoutError
+          ? 'Le serveur met trop de temps à répondre. Vérifiez votre connexion puis réessayez.'
+          : error instanceof Error && error.message.includes('image ID')
+            ? 'Impossible de supprimer cette image car son identifiant est indisponible. Rechargez les images depuis le serveur.'
+            : 'La voiture ou son image n’a pas pu être enregistrée. Vérifiez la connexion puis réessayez.');
         this.carEditorSaving.set(false);
       },
     });

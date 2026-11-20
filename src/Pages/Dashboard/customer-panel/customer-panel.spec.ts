@@ -1,17 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { CustomerPanel } from './customer-panel';
 import { OfferType } from '../../../app/models/orderCar-model';
 import { UserModel, UserRole } from '../../../app/models/user-model';
 import { AuthSessionService, AuthenticatedUser } from '../../../app/services/auth-session-service';
+import { TestDriveService } from '../../../app/services/test-drive/test-drive-service';
 import { UserService } from '../../../app/services/user/user-service';
 
 describe('CustomerPanel', () => {
   let component: CustomerPanel;
   let fixture: ComponentFixture<CustomerPanel>;
   let userService: { getUserById: ReturnType<typeof vi.fn> };
+  let testDriveService: { createTestDrive: ReturnType<typeof vi.fn> };
   const sessionCustomer: AuthenticatedUser = {
     id: 8,
     firstname: 'Jean',
@@ -58,6 +60,9 @@ describe('CustomerPanel', () => {
     userService = {
       getUserById: vi.fn().mockReturnValue(of(user)),
     };
+    testDriveService = {
+      createTestDrive: vi.fn().mockReturnValue(of({})),
+    };
 
     await TestBed.configureTestingModule({
       imports: [CustomerPanel],
@@ -68,6 +73,7 @@ describe('CustomerPanel', () => {
           useValue: { getUser: () => sessionCustomer },
         },
         { provide: UserService, useValue: userService },
+        { provide: TestDriveService, useValue: testDriveService },
       ],
     }).compileComponents();
 
@@ -105,5 +111,75 @@ describe('CustomerPanel', () => {
     expect(fixture.nativeElement.textContent).toContain('Essence');
     expect(fixture.nativeElement.textContent).toContain('2026-11-05T10:00:00');
     expect(fixture.nativeElement.textContent).toContain('Confirmé');
+  });
+
+  it('should keep the session profile visible if the client endpoint fails', () => {
+    userService.getUserById.mockReturnValue(throwError(() => new Error('Backend failure')));
+    fixture.destroy();
+    fixture = TestBed.createComponent(CustomerPanel);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('jean@example.com');
+    expect(fixture.nativeElement.textContent).toContain(
+      'le serveur n’a pas pu charger vos commandes',
+    );
+  });
+
+  it('should let the customer request a test drive for an eligible car', () => {
+    userService.getUserById.mockReturnValue(
+      of({
+        ...sessionCustomer,
+        password: '',
+        ordersCars: [
+          {
+            id: 21,
+            car: {
+              carId: 7,
+              brand: 'Peugeot',
+              model: '208',
+              motorisation: 'Essence',
+              kilometer: 5000,
+              price: 18000,
+              testDriving: true,
+            },
+            tradeOldCar: null,
+            subscriptionInsurance: false,
+            offerType: OfferType.BUY,
+            user: { id: sessionCustomer.id },
+            testDriving: null,
+          },
+        ],
+      }),
+    );
+    fixture.destroy();
+    fixture = TestBed.createComponent(CustomerPanel);
+    fixture.detectChanges();
+
+    const requestButton = Array.from(
+      fixture.nativeElement.querySelectorAll('button'),
+    ).find((button) => (button as HTMLButtonElement).textContent?.includes('Demander un essai')) as
+      | HTMLButtonElement
+      | undefined;
+    expect(requestButton).toBeDefined();
+    requestButton?.click();
+    fixture.detectChanges();
+
+    const dateInput = fixture.nativeElement.querySelector(
+      'input[name="testDate"]',
+    ) as HTMLInputElement;
+    dateInput.value = '2026-11-20T10:30';
+    dateInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    const form = fixture.nativeElement.querySelector('.test-drive-form') as HTMLFormElement;
+    form.dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+
+    expect(testDriveService.createTestDrive).toHaveBeenCalledWith({
+      testDate: '2026-11-20T10:30',
+      confirmed: false,
+      carId: 7,
+    });
+    expect(fixture.nativeElement.textContent).toContain('a été enregistrée');
   });
 });

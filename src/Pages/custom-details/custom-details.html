@@ -42,6 +42,42 @@
         </label>
       </div>
 
+      <div class="car-image-editor">
+        <label>
+          Image de la voiture
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            [disabled]="saving || imageLoading"
+            (change)="selectCarImage($event)">
+        </label>
+        @if (imageLoading) {
+          <p>Chargement de l’image...</p>
+        }
+        @if (imageError) {
+          <p role="alert">{{ imageError }}</p>
+        }
+        @if (car?.imageLoadError && !selectedImage) {
+          <p role="alert">L’image enregistrée n’a pas pu être chargée depuis le serveur.</p>
+        }
+        @if (imagePreview) {
+          <img
+            class="car-image-preview"
+            [src]="imagePreview"
+            [alt]="'Aperçu de la photo de ' + carForm.brand + ' ' + carForm.model">
+          <p>Image optimisée avant l’envoi (maximum 1 600 px).</p>
+          <button
+            matButton
+            type="button"
+            color="warn"
+            [disabled]="saving || imageLoading"
+            (click)="removeCarImage()">
+            <mat-icon>delete</mat-icon>
+            Supprimer l’image
+          </button>
+        }
+      </div>
+
       @if (editorError) {
         <p role="alert">{{ editorError }}</p>
       }
@@ -53,9 +89,9 @@
             Supprimer
           </button>
         }
-        <button matButton type="submit" [disabled]="saving">
+        <button matButton type="submit" [disabled]="saving || imageLoading">
           <mat-icon>{{ car ? 'save' : 'add' }}</mat-icon>
-          {{ saving ? 'Enregistrement...' : (car ? 'Enregistrer' : 'Ajouter') }}
+          {{ saving ? 'Enregistrement...' : (imageLoading ? 'Chargement de l’image...' : (car ? 'Enregistrer' : 'Ajouter')) }}
         </button>
       </div>
     </form>

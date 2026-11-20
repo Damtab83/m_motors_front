@@ -6,8 +6,41 @@
   } @else if (errorMessage()) {
     <p class="loading-wait" role="alert">{{ errorMessage() }}</p>
   } @else {
+    @if (cars().length > 0) {
+      <section class="car-filters" aria-label="Filtres des véhicules">
+        <label class="car-filter">
+          <span>Prix maximum : {{ formatNumber(priceLimit()) }} €</span>
+          <input
+            type="range"
+            min="0"
+            [max]="maxPrice()"
+            step="100"
+            [value]="priceLimit()"
+            aria-label="Prix maximum"
+            (input)="updatePriceLimit($event)"
+          >
+        </label>
+        <label class="car-filter">
+          <span>Kilométrage maximum : {{ formatNumber(kilometerLimit()) }} km</span>
+          <input
+            type="range"
+            min="0"
+            [max]="maxKilometer()"
+            step="1000"
+            [value]="kilometerLimit()"
+            aria-label="Kilométrage maximum"
+            (input)="updateKilometerLimit($event)"
+          >
+        </label>
+      </section>
+    }
+    @if (cars().length === 0) {
+      <h6>⚠️ La concession est vide!</h6>
+    } @else if (filteredCars().length === 0) {
+      <p class="loading-wait">Aucun véhicule ne correspond à ces filtres.</p>
+    } @else {
       <div class="show-car">
-        @for (car of cars(); track car.carId ?? $index) {
+        @for (car of filteredCars(); track car.carId ?? $index) {
           <mat-card class="car-card" appearance="outlined">
             <mat-card-header>
               <mat-card-title>{{ car.brand }}</mat-card-title>
@@ -15,6 +48,8 @@
             </mat-card-header>
             @if (car.imageCar) {
               <img mat-card-image [src]="car.imageCar" [alt]="'Photo de ' + car.brand">
+            } @else if (car.imageLoadError) {
+              <p role="status">Photo indisponible</p>
             }
             <mat-card-content>
             </mat-card-content>
@@ -22,10 +57,9 @@
               <a matButton [routerLink]="['/car', car.carId]">Voir</a>
             </mat-card-actions>
           </mat-card>
-        } @empty {
-          <h6>⚠️ La concession est vide!</h6>
         }
       </div>
+    }
   }
 
 </div>

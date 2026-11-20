@@ -35,6 +35,33 @@ h1 {
   text-shadow: 2px 2px #e5bcbc;
 }
 
+.car-filters {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  width: min(100%, 700px);
+  margin: 0 0 2rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: rgb(255 255 255 / 85%);
+  color: #222;
+  box-sizing: border-box;
+}
+
+.car-filter {
+  display: flex;
+  flex: 1 1 240px;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.car-filter input {
+  width: 100%;
+  accent-color: #e40c0c;
+}
+
 .show-car {
   display: flex;
   flex-direction: row;
@@ -74,5 +101,10 @@ h6 {
 
   .show-car {
     gap: 1rem;
+  }
+
+  .car-filters {
+    gap: 1rem;
+    margin-bottom: 1rem;
   }
 }

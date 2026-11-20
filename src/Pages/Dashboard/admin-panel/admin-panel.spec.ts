@@ -6,6 +6,7 @@ import { AdminPanel } from './admin-panel';
 import { CarModel } from '../../../app/models/car-model';
 import { CarService } from '../../../app/services/car/car-service';
 import { DocumentService } from '../../../app/services/document/document-service';
+import { ImageCarService } from '../../../app/services/imageCar/image-car-service';
 import { TestDriveService, TestDriveRequest } from '../../../app/services/test-drive/test-drive-service';
 import { UserService } from '../../../app/services/user/user-service';
 
@@ -66,6 +67,13 @@ describe('AdminPanel', () => {
               uploadedDocument = file;
               return of({});
             },
+          },
+        },
+        {
+          provide: ImageCarService,
+          useValue: {
+            uploadImage: () => of({ imageCarId: 1, name: 'car.jpg', size: 1024 }),
+            deleteImage: () => of(undefined),
           },
         },
         {
@@ -151,6 +159,25 @@ describe('AdminPanel', () => {
 
     expect(deletedCarId).toBe(1);
     expect(fixture.nativeElement.querySelectorAll('tbody tr')).toHaveLength(1);
+  });
+
+  it('should leave the car editor when another admin section is selected', async () => {
+    const buttons = Array.from(fixture.nativeElement.querySelectorAll('button')) as HTMLButtonElement[];
+    buttons.find((button) => button.textContent.includes('Voitures'))?.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector('.section-header button').click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Ajouter une voiture');
+
+    const documentsButton = (Array.from(fixture.nativeElement.querySelectorAll('button')) as HTMLButtonElement[])
+      .find((button) => button.textContent.includes('Documents'));
+    documentsButton?.click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Documents');
+    expect(fixture.nativeElement.querySelector('form')).toBeNull();
   });
 
   it('should upload a PDF document and reject other MIME types', async () => {
